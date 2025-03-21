@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags: []
   layers:
   - Default
@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Ground
+  - Breakable
+  - Wall
   - 
   - 
   - 
@@ -41,3 +41,32 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Sky
+    uniqueID: 2104026237
+    locked: 0
+  - name: CloudBG
+    uniqueID: 366036305
+    locked: 0
+  - name: CloudLonely
+    uniqueID: 4191785349
+    locked: 0
+  - name: Mountain
+    uniqueID: 330054589
+    locked: 0
+  - name: Cloud3
+    uniqueID: 3812518049
+    locked: 0
+  - name: Cloud2
+    uniqueID: 2940578523
+    locked: 0
+  - name: Cloud1
+    uniqueID: 321975847
+    locked: 0
+  - name: Platform
+    uniqueID: 2717850209
+    locked: 0
+  - name: Player
+    uniqueID: 4113834147
+    locked: 0
+  m_RenderingLayers:
+  - Default
