@@ -12,10 +12,10 @@ public class PlayerTricks : MonoBehaviour
     private bool _randomTimeTricksSet = false;
     private float _randomTimeTricks;
     private int _currentInputTrickIndex = 0;
-    public GameObject up;
-    public GameObject left;
-    public GameObject down;
-    public GameObject right;
+    [HideInInspector]public GameObject up;
+    [HideInInspector]public GameObject left;
+    [HideInInspector]public GameObject down;
+    [HideInInspector]public GameObject right;
     private List<string> _chosenInput;
 
     private void Update()
@@ -34,6 +34,13 @@ public class PlayerTricks : MonoBehaviour
         }
     }
     
+    private void TricksStart()
+    {
+        Time.timeScale = 0.25f;
+        TricksInitialize();
+        StartCoroutine(EndTricks());
+    }
+
     private void TricksInitialize()
     {
         int randomNumber = Random.Range(3, 6);
@@ -49,13 +56,6 @@ public class PlayerTricks : MonoBehaviour
         ShowInput(_chosenInput, _currentInputTrickIndex);
     }
 
-    private void TricksStart()
-    {
-        Time.timeScale = 0.25f;
-        TricksInitialize();
-        StartCoroutine(EndTricks());
-    }
-
     public void Tricks(InputAction.CallbackContext context)
     {
         if (!_isTrick)
@@ -64,7 +64,6 @@ public class PlayerTricks : MonoBehaviour
         if (context.performed)
         {
             string inputKey = context.control.name.ToUpper();
-            Debug.Log("Touche à cliquer : " + _chosenInput[_currentInputTrickIndex]);
             if (inputKey == _chosenInput[_currentInputTrickIndex])
             {
                 _currentInputTrickIndex++;
@@ -78,6 +77,12 @@ public class PlayerTricks : MonoBehaviour
                 }
                 HideInput();
                 ShowInput(_chosenInput, _currentInputTrickIndex);
+            }
+            else
+            {
+                HideInput();
+                _isTrick = false;
+                Debug.Log("Tricks raté");
             }
         }
     }
@@ -112,11 +117,9 @@ public class PlayerTricks : MonoBehaviour
     private IEnumerator EndTricks()
     {
         yield return new WaitForSecondsRealtime(4f);
+        HideInput();
+        _isTrick = false;
+        Debug.Log("Tricks raté");
         Time.timeScale = 1f;
-    }
-
-    private IEnumerator Wait2s()
-    {
-        yield return new WaitForSecondsRealtime(2f);
     }
 }

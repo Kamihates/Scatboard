@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,14 +8,20 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer _spriteRend;
     private BoxCollider2D _boxColl;
     private Animator _animator;
+
+    [Header("Speed")]
     public float maxSpeed = 5f;
     public float acceleration = 2f;
     private float _speed = 0f;
     private Vector2 _previousPosition;
+
+    [Header("Jump")]
     public float jumpingPower;
-    public LayerMask groundLayer;
-    public Transform groundCheck;
+    [HideInInspector]public LayerMask groundLayer;
+    [HideInInspector]public Transform groundCheck;
     private bool _doubleJump = true;
+    
+    [Header("Levitation")]
     public float flyTime = 3f;
 
     void Start()
