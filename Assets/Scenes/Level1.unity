@@ -977,10 +977,20 @@ MonoBehaviour:
   dashingTime: 0.2
   isDead: 0
   horizontal: 0
+  verticalInput: 0
   canCrouch: 1
   crouchPower: 0.5
   normalHeight: 1
   isCrouching: 0
+  canLevitate: 1
+  levitationHeight: 3
+  levitationDuration: 10
+  levitationCooldown: 5
+  levitationTimer: 0
+  levitationCooldownTimer: 5
+  levitationStartY: 0
+  isLevitationActive: 0
+  hasReachedLevitationStartY: 0
 --- !u!1 &436044869
 GameObject:
   m_ObjectHideFlags: 0
@@ -1657,6 +1667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 763069b474dafba4690714b8dae26a0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 0}
   manager: {fileID: 0}
 --- !u!1 &579341221
 GameObject:
@@ -10052,16 +10063,6 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: 39, y: -6, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741825
   - first: {x: 60, y: -6, z: 0}
     second:
       serializedVersion: 2
@@ -15434,7 +15435,7 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 1210
+  - m_RefCount: 1209
     m_Data: {fileID: 11400000, guid: aab4aad83722a8541b755ba26eeba9af, type: 2}
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: ed9d341ecae92a143b4699c2632f0090, type: 2}
@@ -15463,7 +15464,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {fileID: 11400000, guid: caee1300029a7d148be65bb5de068a80, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 1210
+  - m_RefCount: 1209
     m_Data: {fileID: 21300000, guid: 10331f0bf0a919f4c88a9c3bf16ed9a5, type: 3}
   - m_RefCount: 3
     m_Data: {fileID: 21300000, guid: 8da72d4f425187f44b80143fe0ea2fc5, type: 3}
@@ -15492,7 +15493,7 @@ Tilemap:
   - m_RefCount: 16
     m_Data: {fileID: 21300000, guid: 1584e2d65fa9b50418666bc5f20e668a, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 1313
+  - m_RefCount: 1312
     m_Data:
       e00: 1
       e01: 0
@@ -15529,7 +15530,7 @@ Tilemap:
       e32: 6.18e-43
       e33: 6.15e-43
   m_TileColorArray:
-  - m_RefCount: 1313
+  - m_RefCount: 1312
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -16525,6 +16526,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 22def7e8-2754-44c2-9cff-bcba896f4f67
     m_ActionName: 'Player/Dash[/Keyboard/leftArrow,/Keyboard/rightArrow,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1208385991}
+        m_TargetAssemblyTypeName: CharacterController2D, Assembly-CSharp
+        m_MethodName: Levitate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 64f0a717-e05b-4338-b670-4b917c89baad
+    m_ActionName: 'Player/Levitate[/Keyboard/shift]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -16771,7 +16788,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5d4bd96341784ca4380bf71f23c940c4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

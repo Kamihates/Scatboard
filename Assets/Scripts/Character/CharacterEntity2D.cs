@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CharacterEntity2D : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    [HideInInspector] public Rigidbody2D rb;
     private SpriteRenderer sr;
     private Animator animator;
     private TrailRenderer tr;
@@ -32,9 +32,35 @@ public class CharacterEntity2D : MonoBehaviour
     {
         if (manager.isDead || isDashing || manager.isCrouching) return;
 
-        rb.linearVelocity = new Vector2(manager.horizontal * manager.speed, rb.linearVelocity.y);
-        animator.SetFloat("Speed", Mathf.Abs(manager.horizontal));
+        if (manager.isLevitationActive)
+        {
+            HandleLevitationMovement();
+            manager.levitationTimer -= Time.deltaTime;
 
+            if (manager.levitationTimer <= 0)
+            {
+                manager.isLevitationActive = false;
+                rb.gravityScale = 2;
+                manager.levitationCooldownTimer = manager.levitationCooldown;
+                manager.canLevitate = false;  // Désactive temporairement la lévitation
+            }
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(manager.horizontal * manager.speed, rb.linearVelocity.y);
+        }
+
+        // Gestion du cooldown de la lévitation
+        if (!manager.canLevitate)
+        {
+            manager.levitationCooldownTimer -= Time.deltaTime;
+            if (manager.levitationCooldownTimer <= 0)
+            {
+                manager.canLevitate = true; // Réactive la possibilité de léviter
+            }
+        }
+
+        animator.SetFloat("Speed", Mathf.Abs(manager.horizontal));
         Flip();
 
         if (IsGrounded())
@@ -44,9 +70,41 @@ public class CharacterEntity2D : MonoBehaviour
         }
     }
 
-    public void SetMovement(float inputX)
+
+    private void HandleLevitationMovement()
+    {
+        // Désactive la gravité
+        rb.gravityScale = 0f;
+
+        // Calcul de la hauteur cible
+        float targetY = manager.levitationStartY + manager.levitationHeight;
+
+        if (!manager.hasReachedLevitationStartY)
+        {
+            // Tant que la hauteur cible n'est pas atteinte, on monte
+            if (transform.position.y < targetY - 0.1f)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 5f); // Vitesse de montée
+            }
+            else
+            {
+                // Une fois à la hauteur, on passe en mode libre
+                manager.hasReachedLevitationStartY = true;
+            }
+        }
+
+        if (manager.hasReachedLevitationStartY)
+        {
+            // Permet le déplacement libre
+            rb.linearVelocity = new Vector2(manager.horizontal * manager.speed, manager.verticalInput * manager.speed);
+        }
+    }
+
+
+    public void SetMovement(float inputX, float inputY)
     {
         manager.horizontal = inputX;
+        manager.verticalInput = inputY;  // Ajout du mouvement vertical
     }
 
     private bool IsGrounded()
@@ -65,7 +123,7 @@ public class CharacterEntity2D : MonoBehaviour
 
     public void Jump()
     {
-        if (manager.isDead || jumpsLeft <= 0) return;
+        if (manager.isDead || jumpsLeft <= 0 || manager.isLevitationActive) return; // Bloque le saut pendant la lévitation
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, manager.jumpPower);
         animator.SetTrigger("Jump");
@@ -111,7 +169,6 @@ public class CharacterEntity2D : MonoBehaviour
         if (isCrouching)
         {
             rb.linearVelocity = Vector2.zero; // Stop le mouvement
-            // Réduit la taille du collider
             capsuleCollider2D.transform.localScale = new Vector3(capsuleCollider2D.transform.localScale.x, manager.crouchPower, capsuleCollider2D.transform.localScale.z);
         }
         else
@@ -119,5 +176,4 @@ public class CharacterEntity2D : MonoBehaviour
             capsuleCollider2D.transform.localScale = new Vector3(capsuleCollider2D.transform.localScale.x, manager.normalHeight, capsuleCollider2D.transform.localScale.z); // Remet la taille normale
         }
     }
-
 }

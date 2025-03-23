@@ -12,8 +12,9 @@ public class CharacterController2D : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        float inputX = context.ReadValue<Vector2>().x;
-        characterEntity.SetMovement(inputX);
+        // Lecture de l'input horizontal et vertical
+        Vector2 input = context.ReadValue<Vector2>();
+        characterEntity.SetMovement(input.x, input.y);
     }
 
     public void Jump(InputAction.CallbackContext context)
@@ -31,5 +32,30 @@ public class CharacterController2D : MonoBehaviour
     public void Crouch(InputAction.CallbackContext context)
     {
         characterEntity.Crouch(context.performed);
+    }
+
+    public void Levitate(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // Empêcher d'activer la lévitation si le cooldown n'est pas terminé
+            if (!characterEntity.manager.isLevitationActive && characterEntity.manager.canLevitate)
+            {
+                characterEntity.manager.isLevitationActive = true;
+                characterEntity.manager.levitationStartY = characterEntity.transform.position.y;
+                characterEntity.manager.levitationTimer = characterEntity.manager.levitationDuration;
+                characterEntity.manager.hasReachedLevitationStartY = false;
+            }
+            else if (characterEntity.manager.isLevitationActive)
+            {
+                characterEntity.manager.isLevitationActive = false;
+                characterEntity.rb.gravityScale = 2f;
+                characterEntity.rb.linearVelocity = Vector2.zero;
+
+                // Lancer le cooldown une fois la lévitation désactivée
+                characterEntity.manager.levitationCooldownTimer = characterEntity.manager.levitationCooldown;
+                characterEntity.manager.canLevitate = false;
+            }
+        }
     }
 }
