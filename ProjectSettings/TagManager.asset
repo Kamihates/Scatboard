@@ -62,6 +62,9 @@ TagManager:
   - name: Cloud1
     uniqueID: 321975847
     locked: 0
+  - name: Decorations
+    uniqueID: 936619903
+    locked: 0
   - name: Platform
     uniqueID: 2717850209
     locked: 0
