@@ -22,7 +22,7 @@ public class PlayerTricks : MonoBehaviour
     {
         if (!_randomTimeTricksSet)
         {    
-            _randomTimeTricks = Random.Range(9f, 15f);
+            _randomTimeTricks = Random.Range(15f, 20f);
             _randomTimeTricksSet = true;
         }
         _timeTricks += Time.deltaTime;
@@ -83,6 +83,7 @@ public class PlayerTricks : MonoBehaviour
                 HideInput();
                 _isTrick = false;
                 Debug.Log("Tricks raté");
+                Time.timeScale = 1f;
             }
         }
     }
@@ -117,9 +118,12 @@ public class PlayerTricks : MonoBehaviour
     private IEnumerator EndTricks()
     {
         yield return new WaitForSecondsRealtime(4f);
-        HideInput();
-        _isTrick = false;
-        Debug.Log("Tricks raté");
-        Time.timeScale = 1f;
+        if (_isTrick)
+        {
+            HideInput();
+            _isTrick = false;
+            Debug.Log("Tricks raté");
+            Time.timeScale = 1f;
+        }
     }
 }
